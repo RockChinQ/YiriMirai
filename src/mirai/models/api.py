@@ -11,7 +11,7 @@ from typing import (
     Union, cast
 )
 
-from mirai.exceptions import ApiParametersError
+from ..exceptions import ApiParametersError
 
 if TYPE_CHECKING:
     from typing_extensions import Literal
@@ -23,20 +23,21 @@ else:
 
 from pydantic import ValidationError, validator
 
-from mirai.api_provider import ApiProvider, Method
-from mirai.models.base import (
+from ..api_provider import ApiProvider, Method
+from ..models.base import (
     MiraiBaseModel, MiraiIndexedMetaclass, MiraiIndexedModel
 )
-from mirai.models.entities import (
+from ..models.entities import (
     Friend, Group, GroupConfigModel, GroupMember, MemberInfoModel
 )
-from mirai.models.events import (
+from ..models.events import (
     FriendMessage, GroupMessage, OtherClientMessage, RequestEvent,
     StrangerMessage, TempMessage
 )
-from mirai.models.message import (
+from ..models.message import (
     Image, MessageChain, MessageComponent, TMessage, Voice
 )
+from ..utils import async_
 
 logger = logging.getLogger(__name__)
 

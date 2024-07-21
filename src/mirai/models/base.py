@@ -4,11 +4,12 @@
 """
 from typing import Dict, List, Type
 
-import pydantic.main as pdm
+# import pydantic.main as pdm
+from pydantic._internal._model_construction import ModelMetaclass
 from pydantic import BaseModel
 
 
-class MiraiMetaclass(pdm.ModelMetaclass):
+class MiraiMetaclass(ModelMetaclass):
     """此类是 YiriMirai 中使用的 pydantic 模型的元类的基类。"""
 
 
@@ -39,7 +40,7 @@ class MiraiBaseModel(BaseModel, metaclass=MiraiMetaclass):
 
     class Config:
         extra = 'allow'
-        allow_population_by_field_name = True
+        populate_by_name = True
         alias_generator = to_camel
 
 

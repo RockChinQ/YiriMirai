@@ -6,7 +6,7 @@ import inspect
 from collections import defaultdict
 from typing import Dict, Generic, List, Set, TypeVar, cast
 
-from mirai import exceptions
+from . import exceptions
 
 
 async def async_(obj):

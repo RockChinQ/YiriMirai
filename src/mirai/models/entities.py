@@ -15,7 +15,7 @@ else:
     except ImportError:
         from typing_extensions import Literal
 
-from mirai.models.base import MiraiBaseModel
+from ..models.base import MiraiBaseModel
 
 
 class Entity(MiraiBaseModel):

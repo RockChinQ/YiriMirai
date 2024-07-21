@@ -9,10 +9,10 @@ from datetime import datetime
 from json import dumps
 from typing import Any, Dict, Optional, Set, cast
 
-from mirai import exceptions
-from mirai.api_provider import ApiProvider, Method
-from mirai.bus import AbstractEventBus
-from mirai.tasks import Tasks
+from .. import exceptions
+from ..api_provider import ApiProvider, Method
+from ..bus import AbstractEventBus
+from ..tasks import Tasks
 
 logger = logging.getLogger(__name__)
 

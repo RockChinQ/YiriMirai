@@ -9,9 +9,9 @@ from typing import Mapping, Optional, cast
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from mirai.adapters.base import Adapter, AdapterInterface, json_dumps
-from mirai.api_provider import Method
-from mirai.asgi import ASGI
+from ..adapters.base import Adapter, AdapterInterface, json_dumps
+from ..api_provider import Method
+from ..asgi import ASGI
 
 logger = logging.getLogger(__name__)
 
