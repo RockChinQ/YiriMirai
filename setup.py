@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="yiri-mirai-rc",
-    version="0.2.7.3",
+    version="0.2.8.0",
     description="一个轻量级、低耦合的基于 mirai-api-http 的 Python SDK。",
     long_description=open("README.md", "rt", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
