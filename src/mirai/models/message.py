@@ -14,11 +14,12 @@ from typing import (
 
 from pydantic import HttpUrl, validator
 
-from mirai.models.base import (
+from ..models.base import (
     MiraiBaseModel, MiraiIndexedMetaclass, MiraiIndexedModel
 )
-from mirai.models.entities import Friend, GroupMember
-from mirai.utils import kmp
+from ..models.entities import Friend, GroupMember
+from ..utils import kmp
+import pydantic
 
 logger = logging.getLogger(__name__)
 
@@ -256,7 +257,7 @@ class MessageChain(MiraiBaseModel):
 
     消息链对这些操作进行了拓展。在传入元素的地方，一般都可以传入元素的类型。
     """
-    __root__: List[MessageComponent]
+    root: List[MessageComponent]
 
     @staticmethod
     def _parse_message_chain(msg_chain: Iterable):
@@ -274,7 +275,7 @@ class MessageChain(MiraiBaseModel):
                 )
         return result
 
-    @validator('__root__', always=True, pre=True)
+    @validator('root', always=True, pre=True)
     def _parse_component(cls, msg_chain):
         if isinstance(msg_chain, (str, MessageComponent)):
             msg_chain = [msg_chain]
@@ -290,13 +291,13 @@ class MessageChain(MiraiBaseModel):
             msg_chain: 列表形式的消息链。
         """
         result = cls._parse_message_chain(msg_chain)
-        return cls(__root__=result)
+        return cls(root=result)
 
-    def __init__(self, __root__: Iterable[MessageComponent] = None):
-        super().__init__(__root__=__root__)
+    def __init__(self, root: Iterable[MessageComponent] = None):
+        super().__init__(root=root)
 
     def __str__(self):
-        return "".join(str(component) for component in self.__root__)
+        return "".join(str(component) for component in self.root)
 
     def as_mirai_code(self) -> str:
         """将消息链转换为 mirai 码字符串。
@@ -307,14 +308,14 @@ class MessageChain(MiraiBaseModel):
             mirai 码字符串。
         """
         return "".join(
-            component.as_mirai_code() for component in self.__root__
+            component.as_mirai_code() for component in self.root
         )
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.__root__!r})'
+        return f'{self.__class__.__name__}({self.root!r})'
 
     def __iter__(self):
-        yield from self.__root__
+        yield from self.root
 
     @overload
     def get(self, index: int) -> MessageComponent:
@@ -359,10 +360,10 @@ class MessageChain(MiraiBaseModel):
         """
         # 正常索引
         if isinstance(index, int):
-            return self.__root__[index]
+            return self.root[index]
         # 切片索引
         if isinstance(index, slice):
-            return self.__root__[index]
+            return self.root[index]
         # 指定 count
         if count:
             if isinstance(index, type):
@@ -427,13 +428,13 @@ class MessageChain(MiraiBaseModel):
             value = Plain(value)
         if isinstance(value, Iterable):
             value = (Plain(c) if isinstance(c, str) else c for c in value)
-        self.__root__[key] = value  # type: ignore
+        self.root[key] = value  # type: ignore
 
     def __delitem__(self, key: Union[int, slice]):
-        del self.__root__[key]
+        del self.root[key]
 
     def __reversed__(self) -> Iterable[MessageComponent]:
-        return reversed(self.__root__)
+        return reversed(self.root)
 
     def has(
         self, sub: Union[MessageComponent, Type[MessageComponent],
@@ -478,31 +479,31 @@ class MessageChain(MiraiBaseModel):
         return other in self
 
     def __len__(self) -> int:
-        return len(self.__root__)
+        return len(self.root)
 
     def __add__(
         self, other: Union['MessageChain', MessageComponent, str]
     ) -> 'MessageChain':
         if isinstance(other, MessageChain):
-            return self.__class__(self.__root__ + other.__root__)
+            return self.__class__(self.root + other.root)
         if isinstance(other, str):
-            return self.__class__(self.__root__ + [Plain(other)])
+            return self.__class__(self.root + [Plain(other)])
         if isinstance(other, MessageComponent):
-            return self.__class__(self.__root__ + [other])
+            return self.__class__(self.root + [other])
         return NotImplemented
 
     def __radd__(self, other: Union[MessageComponent, str]) -> 'MessageChain':
         if isinstance(other, MessageComponent):
-            return self.__class__([other] + self.__root__)
+            return self.__class__([other] + self.root)
         if isinstance(other, str):
             return self.__class__(
-                [cast(MessageComponent, Plain(other))] + self.__root__
+                [cast(MessageComponent, Plain(other))] + self.root
             )
         return NotImplemented
 
     def __mul__(self, other: int):
         if isinstance(other, int):
-            return self.__class__(self.__root__ * other)
+            return self.__class__(self.root * other)
         return NotImplemented
 
     def __rmul__(self, other: int):
@@ -513,7 +514,7 @@ class MessageChain(MiraiBaseModel):
 
     def __imul__(self, other: int):
         if isinstance(other, int):
-            self.__root__ *= other
+            self.root *= other
         return NotImplemented
 
     def index(
@@ -552,7 +553,7 @@ class MessageChain(MiraiBaseModel):
                     return index
             raise ValueError("消息链中不存在该类型的组件。")
         if isinstance(x, MessageComponent):
-            return self.__root__.index(x, i, j)
+            return self.root.index(x, i, j)
         raise TypeError(f"类型不匹配，当前类型：{type(x)}")
 
     def count(self, x: Union[MessageComponent, Type[MessageComponent]]) -> int:
@@ -568,7 +569,7 @@ class MessageChain(MiraiBaseModel):
         if isinstance(x, type):
             return sum(1 for i in self if type(i) is x)
         if isinstance(x, MessageComponent):
-            return self.__root__.count(x)
+            return self.root.count(x)
         raise TypeError(f"类型不匹配，当前类型：{type(x)}")
 
     def extend(self, x: Iterable[Union[MessageComponent, str]]):
@@ -577,7 +578,7 @@ class MessageChain(MiraiBaseModel):
         Args:
             x: 另一个消息链，也可为消息元素或字符串元素的序列。
         """
-        self.__root__.extend(Plain(c) if isinstance(c, str) else c for c in x)
+        self.root.extend(Plain(c) if isinstance(c, str) else c for c in x)
 
     def append(self, x: Union[MessageComponent, str]):
         """将一个消息元素或字符串元素添加到消息链末尾。
@@ -585,7 +586,7 @@ class MessageChain(MiraiBaseModel):
         Args:
             x: 消息元素或字符串元素。
         """
-        self.__root__.append(Plain(x) if isinstance(x, str) else x)
+        self.root.append(Plain(x) if isinstance(x, str) else x)
 
     def insert(self, i: int, x: Union[MessageComponent, str]):
         """将一个消息元素或字符串添加到消息链中指定位置。
@@ -594,7 +595,7 @@ class MessageChain(MiraiBaseModel):
             i: 插入位置。
             x: 消息元素或字符串元素。
         """
-        self.__root__.insert(i, Plain(x) if isinstance(x, str) else x)
+        self.root.insert(i, Plain(x) if isinstance(x, str) else x)
 
     def pop(self, i: int = -1) -> MessageComponent:
         """从消息链中移除并返回指定位置的元素。
@@ -605,7 +606,7 @@ class MessageChain(MiraiBaseModel):
         Returns:
             MessageComponent: 移除的元素。
         """
-        return self.__root__.pop(i)
+        return self.root.pop(i)
 
     def remove(self, x: Union[MessageComponent, Type[MessageComponent]]):
         """从消息链中移除指定元素或指定类型的一个元素。
@@ -616,7 +617,7 @@ class MessageChain(MiraiBaseModel):
         if isinstance(x, type):
             self.pop(self.index(x))
         if isinstance(x, MessageComponent):
-            self.__root__.remove(x)
+            self.root.remove(x)
 
     def exclude(
         self,
@@ -645,7 +646,7 @@ class MessageChain(MiraiBaseModel):
 
     def reverse(self):
         """将消息链原地翻转。"""
-        self.__root__.reverse()
+        self.root.reverse()
 
     @classmethod
     def join(cls, *args: Iterable[Union[str, MessageComponent]]):

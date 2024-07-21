@@ -14,11 +14,11 @@ else:
     except ImportError:
         from typing_extensions import Literal
 
-from mirai.models.base import MiraiIndexedModel
-from mirai.models.entities import (
+from ..models.base import MiraiIndexedModel
+from ..models.entities import (
     Client, Entity, Friend, Group, GroupMember, Permission, Subject
 )
-from mirai.models.message import MessageChain
+from ..models.message import MessageChain
 
 
 class Event(MiraiIndexedModel):

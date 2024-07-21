@@ -63,7 +63,7 @@ class ApiParametersError(TypeError):
         Args:
             err(`str`): pydantic 的解析错误。
         """
-        from mirai.models.api import ApiModel
+        from .models.api import ApiModel
         self._err = err
         model = cast(Type['ApiModel'], err.model)
         try:

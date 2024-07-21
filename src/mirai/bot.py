@@ -10,18 +10,18 @@ from typing import (
     Any, Awaitable, Callable, Dict, Iterable, List, Optional, Type, Union, cast
 )
 
-import mirai.models.api
-from mirai.adapters.base import Adapter, AdapterInterface, ApiProvider
-from mirai.asgi import ASGI, asgi_serve
-from mirai.bus import AbstractEventBus, EventBus
-from mirai.models.api import ApiModel, RespEvent, RespOperate
-from mirai.models.bus import ModelEventBus
-from mirai.models.entities import (
+from .models import api as mapi
+from .adapters.base import Adapter, AdapterInterface, ApiProvider
+from .asgi import ASGI, asgi_serve
+from .bus import AbstractEventBus, EventBus
+from .models.api import ApiModel, RespEvent, RespOperate
+from .models.bus import ModelEventBus
+from .models.entities import (
     Entity, Friend, Group, GroupMember, Permission, Subject
 )
-from mirai.models.events import Event, MessageEvent, RequestEvent, TempMessage
-from mirai.models.message import TMessage
-from mirai.utils import Singleton
+from .models.events import Event, MessageEvent, RequestEvent, TempMessage
+from .models.message import TMessage
+from .utils import Singleton
 
 __all__ = [
     'Mirai', 'SimpleMirai', 'MiraiRunner', 'LifeSpan', 'Startup', 'Shutdown'
@@ -510,7 +510,7 @@ class Mirai(SimpleMirai):
             message: 回复的信息。
         """
         api_type = cast(
-            Type[RespEvent], getattr(mirai.models.api, 'Resp' + event.type)
+            Type[RespEvent], getattr(mapi, 'Resp' + event.type)
         )
         api = api_type.from_event(event, operate, message)
         await api.call(self, 'POST')

@@ -11,8 +11,8 @@ import logging
 from collections import defaultdict
 from typing import Any, Awaitable, Callable, Dict, Iterable, List, Optional
 
-from mirai.exceptions import SkipExecution, StopExecution, StopPropagation
-from mirai.utils import PriorityDict, async_with_exception
+from .exceptions import SkipExecution, StopExecution, StopPropagation
+from .utils import PriorityDict, async_with_exception
 
 logger = logging.getLogger(__name__)
 

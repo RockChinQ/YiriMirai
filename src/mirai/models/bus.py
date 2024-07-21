@@ -8,9 +8,9 @@ import logging
 from collections import defaultdict
 from typing import Any, Awaitable, Callable, List, Type, Union, cast
 
-from mirai.bus import EventBus
-from mirai.models.events import Event
-from mirai.utils import async_with_exception
+from ..bus import EventBus
+from ..models.events import Event
+from ..utils import async_with_exception
 
 logger = logging.getLogger(__name__)
 

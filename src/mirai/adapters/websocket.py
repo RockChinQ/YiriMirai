@@ -17,12 +17,12 @@ from websockets.exceptions import (
     ConnectionClosed, ConnectionClosedOK, InvalidURI
 )
 
-from mirai import exceptions
-from mirai.adapters.base import (
+from .. import exceptions
+from ..adapters.base import (
     Adapter, AdapterInterface, error_handler_async, json_dumps
 )
-from mirai.api_provider import Method
-from mirai.tasks import Tasks
+from ..api_provider import Method
+from ..tasks import Tasks
 
 logger = logging.getLogger(__name__)
 

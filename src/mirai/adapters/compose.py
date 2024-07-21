@@ -3,8 +3,8 @@
 此模块提供组合适配器，可以将两个适配器组合使用。
 """
 
-from mirai.adapters.base import Adapter
-from mirai.api_provider import Method
+from ..adapters.base import Adapter
+from ..api_provider import Method
 
 
 class ComposeAdapter(Adapter):

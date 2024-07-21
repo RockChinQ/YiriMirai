@@ -12,22 +12,22 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mirai.adapters import (
+    from .adapters import (
         Adapter, ComposeAdapter, HTTPAdapter, WebHookAdapter, WebSocketAdapter
     )
 else:
-    from mirai.adapters import Adapter
+    from .adapters import Adapter
 
-from mirai.api_provider import Method
-from mirai.bot import (
+from .api_provider import Method
+from .bot import (
     LifeSpan, Mirai, MiraiRunner, Shutdown, SimpleMirai, Startup
 )
-from mirai.bus import EventBus
-from mirai.colorlog import ColoredFormatter
-from mirai.exceptions import (
+from .bus import EventBus
+from .colorlog import ColoredFormatter
+from .exceptions import (
     ApiError, NetworkError, SkipExecution, StopExecution, StopPropagation
 )
-from mirai.models import (
+from .models import (
     At, AtAll, Dice, Event, Face, FriendMessage, GroupMessage, Image,
     MessageChain, MessageEvent, Plain, Poke, PokeNames, StrangerMessage,
     TempMessage, Voice, deserialize, serialize
@@ -72,6 +72,6 @@ def __getattr__(name):
     if name in (
         'HTTPAdapter', 'WebSocketAdapter', 'WebHookAdapter', 'ComposeAdapter'
     ):
-        import mirai.adapters
-        return getattr(mirai.adapters, name)
+        from . import adapters
+        return getattr(adapters, name)
     raise AttributeError(f'Module {__name__} has no attribute {name}')

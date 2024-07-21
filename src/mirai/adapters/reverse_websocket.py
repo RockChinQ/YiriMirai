@@ -2,8 +2,8 @@
 """
 此模块提供反向 WebSocket 适配器，适用于 mirai-api-http 的 reverse websocket adapter。
 """
-from mirai.adapters.base import Adapter
-from mirai.api_provider import Method
+from ..adapters.base import Adapter
+from ..api_provider import Method
 
 
 class ReverseWebSocketAdapter(Adapter):
