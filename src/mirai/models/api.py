@@ -118,6 +118,14 @@ class MemberListResponse(Response):
         yield from self.data
 
 
+class GetBotListResponse(Response):
+    """获取可用 QQ 号列表。"""
+    data: List[int]
+    """可用 QQ 号列表"""
+    def __iter__(self):
+        yield from self.data
+
+
 class Sex(str, Enum):
     """性别。"""
     Unknown = 'UNKNOWN'
@@ -579,6 +587,14 @@ class UserProfile(ApiGet):
         name = "userProfile"
         alias = "user_profile"
         response_type = ProfileResponse
+
+
+class GetBotList(ApiGet):
+    """获取可用的 QQ 号列表。"""
+    class Info(ApiGet.Info):
+        name = 'botList'
+        alias = 'get_bot_list'
+        response_type = GetBotListResponse
 
 
 class SendMessage(ApiBaseModel):
@@ -1166,6 +1182,7 @@ __all__ = [
     'CmdRegister',
     'DeleteFriend',
     'DownloadInfo',
+    'GetBotListResponse',
     'FileDelete',
     'FileInfo',
     'FileInfoResponse',
@@ -1226,4 +1243,5 @@ __all__ = [
     'UploadImage',
     'UploadVoice',
     'UserProfile',
+    'GetBotList',
 ]
